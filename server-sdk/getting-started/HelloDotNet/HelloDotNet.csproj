@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- This dependency deliberately refers to 8.* rather than a specific
+         version, to ensure that the hello-dotnet demo always uses the latest
+         public release of the SDK. -->
+    <PackageReference Include="LaunchDarkly.ServerSdk" Version="8.*" />
+  </ItemGroup>
+</Project>

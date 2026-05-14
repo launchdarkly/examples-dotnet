@@ -1,0 +1,52 @@
+name: Verify hello app
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 9 * * *'
+  push:
+    branches: [ main, 'feat/**' ]
+    paths-ignore:
+      - '**.md' # Do not need to run CI for markdown changes.
+  pull_request:
+    branches: [ main, 'feat/**' ]
+    paths-ignore:
+      - '**.md'
+
+jobs:
+  build-and-run:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    permissions:
+      id-token: write # Needed if using OIDC to get release secrets.
+
+    defaults:
+      run:
+        working-directory: server-sdk/getting-started
+
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup dotnet build tools
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2 # v5.3.0
+        with:
+          dotnet-version: 8.0
+
+      - name: Restore dotnet dependencies
+        shell: bash
+        id: restore
+        run: dotnet restore
+
+      - name: Build
+        shell: bash
+        id: build
+        run: dotnet build
+
+      - uses: launchdarkly/gh-actions/actions/verify-hello-app@verify-hello-app-v2
+        with:
+          use_server_key: true
+          role_arn: ${{ vars.AWS_ROLE_ARN }}
+          command: cd server-sdk/getting-started && dotnet run --project HelloDotNet --framework net8.0
