@@ -7,9 +7,10 @@ or the [.NET SDK reference guide](https://docs.launchdarkly.com/sdk/server-side/
 
 ## SDKs
 
-| SDK             | Package                  | Examples                       |
-|-----------------|--------------------------|--------------------------------|
-| .NET Server SDK | `LaunchDarkly.ServerSdk` | [`server-sdk/`](./server-sdk/) |
+| SDK                | Package                     | Examples                                 |
+|--------------------|-----------------------------|------------------------------------------|
+| .NET Server SDK    | `LaunchDarkly.ServerSdk`    | [`server-sdk/`](./server-sdk/)           |
+| .NET Server AI SDK | `LaunchDarkly.ServerSdk.Ai` | [`server-sdk-ai/`](./server-sdk-ai/)     |
 
 ## Requirements
 
