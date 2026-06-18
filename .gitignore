@@ -9,3 +9,6 @@
 
 # Local env files
 .env
+
+# MAUI appsettings (contains LaunchDarkly keys)
+**/Resources/Raw/appsettings.json
