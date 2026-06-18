@@ -11,6 +11,9 @@
     <PackageReference Include="LaunchDarkly.ServerSdk" Version="8.*" />
     <PackageReference Include="LaunchDarkly.ServerSdk.Ai" Version="0.*" />
     <PackageReference Include="AWSSDK.BedrockRuntime" Version="3.*" />
+    <!-- Only needed if using AWS SSO credentials (e.g. `aws sso login`) -->
+    <PackageReference Include="AWSSDK.SSO" Version="3.*" />
+    <PackageReference Include="AWSSDK.SSOOIDC" Version="3.*" />
     <PackageReference Include="DotNetEnv" Version="3.*" />
   </ItemGroup>
 
