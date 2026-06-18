@@ -1,0 +1,11 @@
+# .NET build output
+**/bin/
+**/obj/
+
+# IDE
+.vs/
+.vscode/
+*.user
+
+# Local env files
+.env
