@@ -1,0 +1,43 @@
+name: server-sdk-ai
+on:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron: '0 9 * * *'
+  push:
+    branches: [ main, 'feat/**' ]
+    paths:
+      - 'server-sdk-ai/**'
+      - '.github/workflows/server-sdk-ai.yml'
+  pull_request:
+    branches: [ main, 'feat/**' ]
+    paths:
+      - 'server-sdk-ai/**'
+      - '.github/workflows/server-sdk-ai.yml'
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+      fail-fast: false
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
+
+      - name: Setup dotnet build tools
+        uses: actions/setup-dotnet@9a946fdbd5fb07b82b2f5a4466058b876ab72bb2 # v5.3.0
+        with:
+          dotnet-version: 8.0
+
+      # Build-only: these examples call external model providers and need
+      # provider credentials to run, so CI just compiles them to catch build errors.
+      - name: Build server-sdk-ai examples
+        shell: bash
+        run: |
+          set -e
+          for proj in $(find server-sdk-ai -name '*.csproj' | sort); do
+            echo "::group::Building $proj"
+            dotnet build "$proj"
+            echo "::endgroup::"
+          done

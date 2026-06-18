@@ -1,2 +1,5 @@
 # Repository Maintainers
 * @launchdarkly/team-sdk-net
+
+# AI examples
+/server-sdk-ai/ @launchdarkly/team-ai-agents @launchdarkly/team-ai-evals
