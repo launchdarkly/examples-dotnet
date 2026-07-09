@@ -1,13 +1,24 @@
 using DotNetEnv;
+using LaunchDarkly.Observability;
 using LaunchDarkly.Sdk;
 using LaunchDarkly.Sdk.Server;
 using LaunchDarkly.Sdk.Server.Ai;
 using LaunchDarkly.Sdk.Server.Ai.Adapters;
 using LaunchDarkly.Sdk.Server.Ai.Config;
 using LaunchDarkly.Sdk.Server.Ai.Tracking;
+using LaunchDarkly.Sdk.Server.Integrations;
+using Microsoft.Extensions.Hosting;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Trace;
 using OpenAI.Chat;
 
 Env.TraversePath().Load();
+
+// Enable the OpenAI SDK's experimental OpenTelemetry instrumentation so its chat
+// completions emit spans and metrics. This must be set before the ChatClient is
+// used; the observability plugin configured below exports the telemetry to
+// LaunchDarkly.
+Environment.SetEnvironmentVariable("OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY", "true");
 
 var sdkKey = Environment.GetEnvironmentVariable("LAUNCHDARKLY_SDK_KEY");
 if (string.IsNullOrEmpty(sdkKey))
@@ -29,7 +40,22 @@ if (string.IsNullOrEmpty(openAiKey))
 var completionKey = Environment.GetEnvironmentVariable("LAUNCHDARKLY_COMPLETION_KEY")
     ?? "sample-completion";
 
-var ldClient = new LdClient(Configuration.Builder(sdkKey).Build());
+// The observability plugin registers OpenTelemetry into a dependency-injection
+// service collection and relies on the .NET generic host to run the exporters.
+var hostBuilder = Host.CreateApplicationBuilder(args);
+
+var ldClient = new LdClient(Configuration.Builder(sdkKey)
+    .Plugins(new PluginConfigurationBuilder()
+        .Add(ObservabilityPlugin.Builder(hostBuilder.Services)
+            .WithServiceName("openai-chat-completions")
+            .WithServiceVersion("1.0.0")
+            // The OpenAI SDK emits telemetry under the "OpenAI.ChatClient" activity
+            // source and meter. Add them so the plugin exports the model call's
+            // spans and token-usage metrics alongside the AI Config tracker events.
+            .WithExtendedTracingConfig(tracing => tracing.AddSource("OpenAI.ChatClient"))
+            .WithExtendedMeterConfiguration(metrics => metrics.AddMeter("OpenAI.ChatClient"))
+            .Build()))
+    .Build());
 if (!ldClient.Initialized)
 {
     Console.Error.WriteLine(
@@ -38,6 +64,11 @@ if (!ldClient.Initialized)
     return;
 }
 Console.WriteLine("*** SDK successfully initialized!");
+
+// Building the LdClient registered the plugin's OpenTelemetry services on the host,
+// so the host must be built after the client. Starting it boots the exporters.
+using var host = hostBuilder.Build();
+await host.StartAsync();
 
 var aiClient = new LdAiClient(new LdClientAdapter(ldClient));
 
@@ -113,6 +144,9 @@ catch (Exception ex)
 finally
 {
     ldClient.FlushAndWait(TimeSpan.FromSeconds(5));
+    // Stop the host so the OpenTelemetry exporters flush any buffered spans and
+    // metrics to LaunchDarkly before the process exits.
+    await host.StopAsync();
     ldClient.Dispose();
 }
 

@@ -9,3 +9,9 @@ For more comprehensive instructions, you can visit your [Quickstart page](https:
 | Example                              | Description                                     |
 |--------------------------------------|-------------------------------------------------|
 | [Flag Retrieval](./getting-started/) | Initialize the SDK and evaluate a feature flag  |
+
+## Features
+
+| Example                                              | Description                                                          |
+|------------------------------------------------------|----------------------------------------------------------------------|
+| [Observability](./features/plugins/observability/)   | Register the observability plugin and record custom telemetry        |

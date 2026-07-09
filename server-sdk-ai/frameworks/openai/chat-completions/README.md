@@ -2,6 +2,8 @@
 
 This example demonstrates how to use the LaunchDarkly AI SDK for .NET with the [OpenAI Chat Completions API](https://platform.openai.com/docs/api-reference/chat).
 
+It also wires up the LaunchDarkly [observability plugin](https://launchdarkly.com/docs/sdk/observability/dotnet). The example sets the `OPENAI_EXPERIMENTAL_ENABLE_OPEN_TELEMETRY` environment variable to `true` so the OpenAI SDK emits OpenTelemetry spans and metrics (under the `OpenAI.ChatClient` source and meter), and registers those with the plugin so the model call's traces and token-usage metrics are exported to LaunchDarkly alongside the AI Config tracker events.
+
 ## Prerequisites
 
 - .NET 8.0 SDK
