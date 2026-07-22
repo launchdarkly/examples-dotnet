@@ -1,16 +1,18 @@
-name: Verify hello app
+name: server-sdk
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 9 * * *'
+    - cron: '0 9 * * *'
   push:
     branches: [ main, 'feat/**' ]
-    paths-ignore:
-      - '**.md' # Do not need to run CI for markdown changes.
+    paths:
+      - 'server-sdk/**'
+      - '.github/workflows/server-sdk.yml'
   pull_request:
     branches: [ main, 'feat/**' ]
-    paths-ignore:
-      - '**.md'
+    paths:
+      - 'server-sdk/**'
+      - '.github/workflows/server-sdk.yml'
 
 jobs:
   build-and-run:
