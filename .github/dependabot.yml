@@ -13,6 +13,12 @@ updates:
     cooldown:
       default-days: 7
   - package-ecosystem: "nuget"
+    directory: "/openfeature-server-provider/getting-started"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
     directory: "/server-sdk-ai/features/agent-config"
     schedule:
       interval: "weekly"
