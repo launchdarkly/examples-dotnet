@@ -95,6 +95,14 @@ jobs:
         working-directory: client-sdk/frameworks/maui
         run: dotnet workload install maui
 
+      # The macOS runner image no longer ships the API level 34 platform.
+      - name: Install Android SDK dependencies
+        working-directory: client-sdk/frameworks/maui
+        run: >
+          dotnet build -f net8.0-android -t:InstallAndroidDependencies
+          -p:AndroidSdkDirectory="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+          -p:AcceptAndroidSDKLicenses=True
+
       - name: Build MAUI app (Android)
         working-directory: client-sdk/frameworks/maui
         run: dotnet build -f net8.0-android
