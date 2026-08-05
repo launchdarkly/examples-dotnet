@@ -4,3 +4,65 @@ updates:
     directory: "/getting-started/HelloDotNet"
     schedule:
       interval: "daily"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/client-sdk/frameworks/maui"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/client-sdk/getting-started"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/openfeature-server-provider/getting-started"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk-ai/features/agent-config"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk-ai/features/completion-config"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk-ai/features/judge-config"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk-ai/frameworks/bedrock/converse"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk-ai/frameworks/openai/chat-completions"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
+  - package-ecosystem: "nuget"
+    directory: "/server-sdk/getting-started/HelloDotNet"
+    schedule:
+      interval: "weekly"
+    cooldown:
+      default-days: 7
